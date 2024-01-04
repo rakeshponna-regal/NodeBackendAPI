@@ -4,10 +4,10 @@ import router from './routes/user-routes.js'
 import blogRouter from './routes/blog-routes.js';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
-
+import dotenv from 'dotenv'
 const app = express();
 app.use(express.json())
-
+dotenv.config()
 const options = {
     definition: {
         openapi: "3.0.1",
@@ -32,7 +32,7 @@ const options = {
 }
 const userName = "admin"
 const password = "Admin"
-const port = 3000
+const port = 27017
 const swaggerSpec = swaggerJsdoc(options)
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
@@ -43,10 +43,15 @@ app.get('/api', (req, res, next) => {
     res.send('Hello World!');
 });
 console.log('The value of PORT is: ', process.env.PORT);
-mongoose.connect(`mongodb+srv://${userName}:${password}@cluster0.zkbisye.mongodb.net/?retryWrites=true&w=majority`).then(() => {
+//monorail.proxy.rlwy.net:54513
+mongoose.connect(process.env.MONGO_URL).then(() => {
     console.log("Connected to Database")
 }).catch((err) => console.log(err))
 
-app.listen(port, () => {
-    console.log('Server is running on port ',port);
+// mongoose.connect(`mongodb+srv://${userName}:${password}@cluster0.zkbisye.mongodb.net/?retryWrites=true&w=majority`).then(() => {
+//     console.log("Connected to Database")
+// }).catch((err) => console.log(err))
+
+app.listen(process.env.MONGOPORT, () => {
+    console.log('Server is running on port ',process.env.MONGOPORT);
 });
